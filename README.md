@@ -7,11 +7,11 @@ Usage:
 
 Compile the Java file:
 
-javac OnlineReservationSystemTask1.java
+javac ReservationSystemApp.java
 
 Run the compiled class:
 
-java OnlineReservationSystemTask1
+java ReservationSystemApp
 
 Follow the on-screen prompts to navigate the application:
 Register: Enter 1 to register a new user.
