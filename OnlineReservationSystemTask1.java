@@ -2,143 +2,154 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class OnlineReservationSystemTask1 {
-    private Map<String, String> userDataMap;
-    private Map<String, String> reservationDataMap;
+public class ReservationSystemApp {
+    private Map<String, String> userCredentials;
+    private Map<String, String> reservationRecords;
 
-    public OnlineReservationSystemTask1() {
-        userDataMap = new HashMap<>();
-        reservationDataMap = new HashMap<>();
+    public ReservationSystemApp() {
+        userCredentials = new HashMap<>();
+        reservationRecords = new HashMap<>();
     }
 
-    public void launchApp() {
-        Scanner scanner = new Scanner(System.in);
+    public void startApp(Scanner inputScanner) {
+        boolean input = true;
 
-        while (true) {
-            showMainMenu();
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+        while (input) {
+             System.out.println("------------------------------------------------");
+            System.out.println("     Welcome to the Reservation System       ");
+            System.out.println("                                                ");
+            System.out.println("Please choose an option:");
+            System.out.println("1. Sign Up");
+            System.out.println("2. Sign In");
+            System.out.println("3. Exit");
+            System.out.println("------------------------------------------------");
+            System.out.print("Your choice: ");
+            int userChoice = inputScanner.nextInt();
+            inputScanner.nextLine();
 
-            switch (choice) {
+            switch (userChoice) {
                 case 1:
-                    registerUser(scanner);
+                    signUpUser(inputScanner);
                     break;
                 case 2:
-                    loginUser(scanner);
+                    signInUser(inputScanner);
                     break;
                 case 3:
-                    System.out.println("Exiting...");
-                    return;
+                    System.out.println("Exiting the application...");
+                    input=false;
+                    break;
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    System.out.println("Invalid option. Please try again.");
                     break;
             }
         }
     }
 
-    private void showMainMenu() {
+    private void signUpUser(Scanner inputScanner) {
         System.out.println("------------------------------------------------");
-        System.out.println("     Welcome to Online Reservation System       ");
-        System.out.println("                                                ");
-        System.out.println("Please select an option:");
-        System.out.println("1. Register");
-        System.out.println("2. Login");
-        System.out.println("3. Exit");
-        System.out.println("------------------------------------------------");
-        System.out.print("Enter your choice: ");
-    }
-
-    private void registerUser(Scanner scanner) {
-        System.out.println("------------------------------------------------");
-        System.out.println("                Register here!                  ");
-        System.out.println("                                                ");
-        System.out.print("Enter username: ");
-        String userName = scanner.nextLine();
+        System.out.println("                Sign Up Here!                 ");
+        System.out.println("Note: Username must be of length atleast 6 and Password must be length atleast 8");
+        System.out.print("Username: ");
+        String username = inputScanner.nextLine();
         
-        if (userDataMap.containsKey(userName)) {
-            System.out.println("Error : Username already exists.");
+        if (username.length() < 6) {
+        System.out.println("Error: Username must be at least 6 characters long.");
+        return; // Exit the method if the username is too short
+    }
+        
+        if (userCredentials.containsKey(username)) {
+            System.out.println("Error: Username is already taken.");
             return;
         }
 
-        System.out.print("Enter password: ");
-        String password = scanner.nextLine();
-        userDataMap.put(userName, password);
+        System.out.print("Password: ");
+        String password = inputScanner.nextLine();
+        
+        // Check if the password is at least 8 characters long
+        if (password.length() < 8) {
+            System.out.println("Error: Password must be at least 8 characters long.");
+            return; // Exit the method if the password is too short
+        }
+        
+        userCredentials.put(username, password);
         System.out.println("------------------------------------------------");
-        System.out.println("Successful Registered.");
+        System.out.println("Registration successful.");
         System.out.println("You can now log in.");
     }
 
-    private void loginUser(Scanner scanner) {
+    private void signInUser(Scanner inputScanner) {
         System.out.println("------------------------------------------------");
-        System.out.println("                Login here!                  ");
+        System.out.println("                Sign In Here!                 ");
         System.out.println("                                                ");
-        System.out.print("Enter username: ");
-        String userName = scanner.nextLine();
-        System.out.print("Enter password: ");
-        String password = scanner.nextLine();
+        System.out.print("Username: ");
+        String username = inputScanner.nextLine();
+        System.out.print("Password: ");
+        String password = inputScanner.nextLine();
         System.out.println("------------------------------------------------");
         
-        if (userDataMap.containsKey(userName) && userDataMap.get(userName).equals(password)) {
+        if (userCredentials.containsKey(username) && userCredentials.get(username).equals(password)) {
             System.out.println("Login successful.");
-            handleReservation(scanner, userName);
+            manageReservations(inputScanner, username);
         } else {
-            System.out.println("Invalid username or password.");
+            System.out.println("Incorrect username or password.");
         }
     }
 
-    private void handleReservation(Scanner scanner, String userName) {
-        while (true) {
+    private void manageReservations(Scanner inputScanner, String username) {
+        boolean input = true;
+        while (input) {
             System.out.println("------------------------------------------------");
-            System.out.println("                   Home page                    ");
+            System.out.println("                   Dashboard                    ");
             System.out.println("                                                ");
             System.out.println("Please select an option:");
-            System.out.println("1. For Reservation Press 1");
-            System.out.println("2. For Cancel Reservation Press 2");
-            System.out.println("3. For Logout Press 3");
-            System.out.print("Enter your choice: ");
+            System.out.println("1. Make a Reservation");
+            System.out.println("2. Cancel Reservation");
+            System.out.println("3. Logout");
+            System.out.print("Your choice: ");
 
-            int choice = scanner.nextInt();
-            scanner.nextLine();
+            int userChoice = inputScanner.nextInt();
+            inputScanner.nextLine();
 
-            switch (choice) {
+            switch (userChoice) {
                 case 1:
-                    bookReservation(scanner, userName);
+                    createReservation(inputScanner, username);
                     break;
                 case 2:
-                    cancelReservation(scanner, userName);
+                    removeReservation(inputScanner, username);
                     break;
                 case 3:
                     System.out.println("Logging out...");
-                    return;
+                    input = false;
+                    break;
                 default:
-                    System.out.println("Invalid choice. Please try again.");
+                    System.out.println("Invalid option. Please try again.");
                     break;
             }
         }
     }
 
-    private void bookReservation(Scanner scanner, String userName) {
+    private void createReservation(Scanner inputScanner, String username) {
         System.out.println("------------------------------------------------");
         System.out.print("Enter reservation details: ");
-        String reservationDetails = scanner.nextLine();
 
-        if (reservationDataMap.containsKey(userName)) {
-            System.out.println("You already have a reservation. Cancel it first to make a new one.");
+        if (reservationRecords.containsKey(username)) {
+            System.out.println("You already have a reservation. Please cancel it before making a new one.");
             return;
         }
 
-        reservationDataMap.put(userName, reservationDetails);
-        System.out.println("Reservation success.");
+        String reservationDetails = inputScanner.nextLine();
+        reservationRecords.put(username, reservationDetails);
+        System.out.println("Reservation created successfully.");
     }
 
-    private void cancelReservation(Scanner scanner, String userName) {
-        if (reservationDataMap.containsKey(userName)) {
-            System.out.println("Your current reservation: " + reservationDataMap.get(userName));
+    private void removeReservation(Scanner inputScanner, String username) {
+        if (reservationRecords.containsKey(username)) {
+            System.out.println("Your current reservation: " + reservationRecords.get(username));
             System.out.print("Do you want to cancel this reservation? (Y/N): ");
-            String confirmation = scanner.nextLine();
+            String confirmation = inputScanner.nextLine();
 
             if (confirmation.equalsIgnoreCase("Y")) {
-                reservationDataMap.remove(userName);
+                reservationRecords.remove(username);
                 System.out.println("Reservation cancelled successfully.");
             } else {
                 System.out.println("Reservation not cancelled.");
@@ -149,8 +160,8 @@ public class OnlineReservationSystemTask1 {
     }
 
     public static void main(String[] args) {
-        OnlineReservationSystemTask1 app = new OnlineReservationSystemTask1();
-        app.launchApp();
+        Scanner inputScanner = new Scanner(System.in);
+        ReservationSystemApp app = new ReservationSystemApp();
+        app.startApp(inputScanner);
     }
 }
-
